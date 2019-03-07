@@ -15,6 +15,6 @@ public class ReactiveMongoConfig {
  
     @Bean
     public ReactiveMongoTemplate reactiveMongoTemplate() {
-        return new ReactiveMongoTemplate(mongoClient, "benchmark");
+        return new ReactiveMongoTemplate(mongoClient, "BenchMark");
     }
 }

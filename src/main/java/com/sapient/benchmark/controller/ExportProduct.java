@@ -39,21 +39,24 @@ public class ExportProduct {
 	@GetMapping("/saveskuForProduct/id/{id}")
 	public Flux<SKU> saveSKU(@PathVariable ("id") String productID)
 	{
-		/* Product prod = productRepository.findByProductID(productID);
-		 log.info("Product ID "+productID + "Product name" + prod.getProductname());
-		 */
-		Flux<SKU> skus = skurepository.findByProductID(productID);
+		Mono<Product> prod = productRepository.findByProductID(productID);
+		prod.map(product -> { 
+		
+		Flux<SKU> skus = skurepository.findByProductID(product.getProductID());
 	
 		Flux<SKU> newSKUS = skus.map(sku -> 
 		 {
 			 log.info("sku "+sku);
-			 int newskuid = Integer.parseInt(sku.getSku_id()) +1;
+			 int newskuid = Integer.parseInt(sku.getSku_id()) +10;
 			 SKU newSKU = new SKU(newskuid+"",sku.getSize()+newskuid,"400",sku.getProductID());
-					 skurepository.save(newSKU);
+					 skurepository.save(newSKU).subscribe();
+					 System.out.println("new sku"+newSKU);
 			  return newSKU;
 		 });
 		newSKUS.subscribe(sku -> System.out.println(sku));
 		 return skus;
+		}).subscribe();
+		return null;
 			
 	}
 
